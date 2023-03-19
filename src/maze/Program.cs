@@ -1,4 +1,4 @@
-namespace Maze_Treasure_Hunt
+namespace maze
 {
     internal static class Program
     {

@@ -1,4 +1,4 @@
-﻿namespace Maze_Treasure_Hunt
+﻿namespace maze
 {
     partial class Form1
     {
@@ -29,23 +29,45 @@
         private void InitializeComponent()
         {
             dataGridView1 = new DataGridView();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // dataGridView1
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToDeleteRows = false;
+            dataGridView1.AllowUserToResizeColumns = false;
+            dataGridView1.AllowUserToResizeRows = false;
+            dataGridView1.ColumnHeadersVisible = false;
             dataGridView1.Location = new Point(208, 12);
             dataGridView1.Name = "dataGridView1";
+            dataGridView1.ReadOnly = true;
             dataGridView1.RowTemplate.Height = 25;
             dataGridView1.Size = new Size(580, 375);
             dataGridView1.TabIndex = 0;
+            dataGridView1.RowHeadersVisible = false;
+            dataGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
+            dataGridView1.Anchor = AnchorStyles.Right;
+            dataGridView1.Anchor = AnchorStyles.Bottom;
+
+            // 
+            // button1
+            // 
+            button1.Location = new Point(91, 398);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 1;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(button1);
             Controls.Add(dataGridView1);
             Name = "Form1";
             Text = "Form1";
@@ -56,5 +78,6 @@
         #endregion
 
         private DataGridView dataGridView1;
+        private Button button1;
     }
 }
