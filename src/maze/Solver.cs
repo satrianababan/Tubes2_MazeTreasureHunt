@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -56,7 +57,31 @@ namespace maze
         List<Coordinate> solveByBFS() 
         {
             // TO DO
+            var visited = new HashSet<Coordinate>();
+
+            var queue = new Queue<Coordinate>();
+            queue.Enqueue(start);
+            
+            while(queue.Count > 0)
+            {
+                var vertex = queue.Dequeue();
+
+                if (visited.Contains(vertex))
+                    continue;
+                visited.Add(vertex);
+
+                if ((vertex.x + 1 < colLen) && !visited.Contains(new Coordinate(vertex.x + 1, vertex.y)) && (maze[vertex.x+1,vertex.y] != 'X'))
+                    queue.Enqueue(new Coordinate(vertex.x + 1, vertex.y));
+                if ((vertex.y + 1 < rowLen) && !visited.Contains(new Coordinate(vertex.x, vertex.y + 1)) && (maze[vertex.x, vertex.y + 1] != 'X'))
+                    queue.Enqueue(new Coordinate(vertex.x, vertex.y + 1));
+                if ((vertex.x - 1 > 0) && !visited.Contains(new Coordinate(vertex.x - 1, vertex.y)) && (maze[vertex.x - 1, vertex.y] != 'X'))
+                    queue.Enqueue(new Coordinate(vertex.x - 1, vertex.y));
+                if ((vertex.y - 1 > 0) && !visited.Contains(new Coordinate(vertex.x, vertex.y - 1)) && (maze[vertex.x, vertex.y - 1] != 'X'))
+                    queue.Enqueue(new Coordinate(vertex.x, vertex.y - 1));
+            }
             List<Coordinate> res = new List<Coordinate>();
+
+
             return res;
         }
     }
