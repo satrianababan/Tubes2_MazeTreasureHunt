@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,8 +12,10 @@ namespace maze
 
         public char[,]? maze { get; }
         public Coordinate start;
+        public HashSet<Coordinate> setTreasure = new HashSet<Coordinate>();
         public int rowLen { get; }
         public int colLen { get; }
+        public Form1? form;
 
         public Solver()
         {
@@ -30,7 +32,7 @@ namespace maze
             start = new Coordinate(0,0);
         }
 
-        public Solver(char[,] mat, int rowLen, int colLen)
+        public Solver(char[,] mat, int rowLen, int colLen, Form1 form)
         {
             this.maze = mat;
             this.rowLen = rowLen;
@@ -42,19 +44,22 @@ namespace maze
                     if (mat[i,j] == 'K')
                     {
                         start = new Coordinate(i, j);
-                        return;
+                    } else if (mat[i,j] == 'T')
+                    {
+                        setTreasure.Add(new Coordinate(i, j));
                     }
                 }
             }
+            this.form = form;
         }
 
-        List<Coordinate> solveByDFS() 
+        public List<Coordinate> solveByDFS() 
         {
             // TO DO
             List<Coordinate> res = new List<Coordinate>();
             return res;
         }
-        List<Coordinate> solveByBFS() 
+        public List<Coordinate> solveByBFS() 
         {
             // TO DO
             var visited = new HashSet<Coordinate>();

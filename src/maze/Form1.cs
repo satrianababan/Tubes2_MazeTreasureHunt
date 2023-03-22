@@ -48,8 +48,92 @@ namespace maze
 
         }
 
+
+        private void colorCell(int i, int j, Color c)
+        {
+            dataGridView1[j, i].Style.BackColor = c;
+        }
+
         private void visualizeMap(object sender, EventArgs e)
         {
+            try
+            {
+                string fullDir;
+                if (System.IO.Path.IsPathRooted(textBoxFileName.Text))
+                {
+                    fullDir = textBoxFileName.Text;
+                }
+                else
+                {
+                    fullDir = System.IO.Path.GetFullPath(projectRoot + "\\test\\" + textBoxFileName.Text);
+                }
+                var lines = File.ReadAllLines(fullDir);
+                int rowLen = lines.Length;
+                if (rowLen == 0)
+                {
+                    throw new Exception("File tidak valid");
+                }
+                int colLen = (lines[0].Length + 1) / 2;
+                foreach (var line in lines)
+                {
+                    System.Diagnostics.Debug.WriteLine(line.Length);
+                    if (line.Length != lines[0].Length)
+                    {
+                        throw new Exception("File tidak valid");
+                    }
+                }
+                char[,] matrix = new char[rowLen, colLen];
+                for (int i = 0; i < rowLen; i++)
+                {
+                    for (int j = 0; j < colLen; j++)
+                    {
+                        matrix[i, j] = lines[i][j * 2];
+                    }
+                    i++;
+                }
+                solver = new Solver(matrix, rowLen, colLen, this);
+                dataGridView1.RowCount = rowLen;
+                dataGridView1.ColumnCount = colLen;
+                for (int i = 0; i < rowLen; i++)
+                {
+                    for (int j = 0; j < colLen; j++)
+                    {
+                        if (matrix[i, j] == 'X')
+                        {
+                            colorCell(i, j, Color.Black);
+                        }
+                        else
+                        {
+                            colorCell(i, j, Color.White);
+                            if (matrix[i, j] == 'K')
+                            {
+                                dataGridView1[j, i].Value = "Start";
+                            }
+                            else if (matrix[i, j] == 'T')
+                            {
+                                dataGridView1[j, i].Value = "Treasure";
+
+                            }
+                        }
+                    }
+                }
+                resizeCell(sender, e);
+                labelLoadSuccess.Text = "Load successfull";
+                labelLoadSuccess.ForeColor = Color.Green;
+                isLoaded = true;
+
+            }
+            catch (FileNotFoundException ex)
+            {
+                labelLoadSuccess.Text = "Load failed";
+                labelLoadSuccess.ForeColor = Color.Red;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                labelLoadSuccess.Text = "File is not valid";
+                labelLoadSuccess.ForeColor = Color.Red;
+            }
             labelLoadSuccess.Show();
             timer1.Start();
         }
@@ -61,7 +145,8 @@ namespace maze
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            string CombinedPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..");
+            projectRoot = System.IO.Path.GetFullPath(CombinedPath);
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -113,12 +198,24 @@ namespace maze
             }
         }
 
-        public void AddText(object sender, EventArgs e)
+        private void AddText(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(textBoxFileName.Text))
             {
                 textBoxFileName.Text = emptyInputString;
                 textBoxFileName.ForeColor = Color.Gray;
+            }
+        }
+
+        private void switchTrackEnable(object sender, EventArgs e)
+        {
+            if (trackProgress.Enabled)
+            {
+                trackProgress.Enabled = false;
+            }
+            else
+            {
+                trackProgress.Enabled = true;
             }
         }
 
@@ -162,6 +259,18 @@ namespace maze
         {
             labelLoadSuccess.Hide();
             timer1.Stop();
+        }
+
+        private void button_start_Click(object sender, EventArgs e)
+        {
+            if (dfsButton.Enabled)
+            {
+                solver.solveByDFS();
+            }
+            else
+            {
+                solver.solveByBFS();
+            }
         }
     }
 }

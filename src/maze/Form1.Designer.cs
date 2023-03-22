@@ -36,7 +36,9 @@ namespace maze
             panel1 = new Panel();
             labelInput = new Label();
             splitContainer1 = new SplitContainer();
+            checkProgress = new CheckBox();
             labelLoadSuccess = new Label();
+            trackProgress = new TrackBar();
             labelOutput = new Label();
             title = new Label();
             checkTSP = new CheckBox();
@@ -46,8 +48,7 @@ namespace maze
             textBoxFileName = new TextBox();
             openFileDialog1 = new OpenFileDialog();
             timer1 = new System.Windows.Forms.Timer(components);
-            trackProgress = new TrackBar();
-            checkProgress = new CheckBox();
+            button_start = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
@@ -63,7 +64,7 @@ namespace maze
             dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.AllowUserToResizeColumns = false;
             dataGridView1.AllowUserToResizeRows = false;
-            dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+            dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.BackgroundColor = SystemColors.Control;
             dataGridView1.ColumnHeadersVisible = false;
@@ -76,14 +77,14 @@ namespace maze
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
-            // button1
+            // buttonVisualize
             // 
             buttonVisualize.Anchor = AnchorStyles.Bottom;
             buttonVisualize.Location = new Point(102, 405);
-            buttonVisualize.Name = "button1";
+            buttonVisualize.Name = "buttonVisualize";
             buttonVisualize.Size = new Size(100, 34);
             buttonVisualize.TabIndex = 1;
-            buttonVisualize.Text = "button1";
+            buttonVisualize.Text = "Visualize";
             buttonVisualize.UseVisualStyleBackColor = true;
             buttonVisualize.Click += visualizeMap;
             // 
@@ -101,13 +102,13 @@ namespace maze
             panel1.TabIndex = 2;
             panel1.Paint += panel1_Paint;
             // 
-            // label1
+            // labelInput
             // 
             labelInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             labelInput.AutoSize = true;
             labelInput.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             labelInput.Location = new Point(12, 104);
-            labelInput.Name = "label1";
+            labelInput.Name = "labelInput";
             labelInput.Size = new Size(37, 15);
             labelInput.TabIndex = 1;
             labelInput.Text = "Input";
@@ -123,8 +124,8 @@ namespace maze
             // splitContainer1.Panel1
             // 
             splitContainer1.Panel1.Controls.Add(checkProgress);
-            splitContainer1.Panel1.Controls.Add(trackProgress);
             splitContainer1.Panel1.Controls.Add(labelLoadSuccess);
+            splitContainer1.Panel1.Controls.Add(trackProgress);
             splitContainer1.Panel1.Controls.Add(labelOutput);
             splitContainer1.Panel1.Controls.Add(title);
             splitContainer1.Panel1.Controls.Add(buttonVisualize);
@@ -140,6 +141,7 @@ namespace maze
             // 
             // splitContainer1.Panel2
             // 
+            splitContainer1.Panel2.Controls.Add(button_start);
             splitContainer1.Panel2.Controls.Add(panel1);
             splitContainer1.Panel2.RightToLeft = RightToLeft.No;
             splitContainer1.Panel2MinSize = 350;
@@ -148,59 +150,81 @@ namespace maze
             splitContainer1.SplitterDistance = 306;
             splitContainer1.TabIndex = 3;
             // 
-            // label3
+            // checkProgress
             // 
+            checkProgress.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            checkProgress.AutoSize = true;
+            checkProgress.Location = new Point(11, 241);
+            checkProgress.Name = "checkProgress";
+            checkProgress.Size = new Size(91, 19);
+            checkProgress.TabIndex = 11;
+            checkProgress.Text = "Progress Bar";
+            checkProgress.UseVisualStyleBackColor = true;
+            checkProgress.CheckedChanged += switchTrackEnable;
+            // 
+            // labelLoadSuccess
+            // 
+            labelLoadSuccess.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             labelLoadSuccess.AutoSize = true;
             labelLoadSuccess.ForeColor = Color.Green;
-            labelLoadSuccess.Location = new Point(106, 387);
-            labelLoadSuccess.Name = "label3";
+            labelLoadSuccess.Location = new Point(105, 387);
+            labelLoadSuccess.Name = "labelLoadSuccess";
             labelLoadSuccess.Size = new Size(93, 15);
             labelLoadSuccess.TabIndex = 9;
             labelLoadSuccess.Text = "Load successfull";
             labelLoadSuccess.Click += label3_Click_1;
             // 
-            // labelAlgo
+            // trackProgress
+            // 
+            trackProgress.Enabled = false;
+            trackProgress.Location = new Point(12, 266);
+            trackProgress.Name = "trackProgress";
+            trackProgress.Size = new Size(288, 45);
+            trackProgress.TabIndex = 10;
+            trackProgress.TickStyle = TickStyle.Both;
+            // 
+            // labelOutput
             // 
             labelOutput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             labelOutput.AutoSize = true;
             labelOutput.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
             labelOutput.Location = new Point(12, 148);
-            labelOutput.Name = "labelAlgo";
+            labelOutput.Name = "labelOutput";
             labelOutput.Size = new Size(47, 15);
             labelOutput.TabIndex = 8;
             labelOutput.Text = "Output";
             labelOutput.Click += label3_Click;
             // 
-            // label2
+            // title
             // 
             title.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             title.Font = new Font("Jack Pirate PERSONAL USE ONLY", 23.9999962F, FontStyle.Regular, GraphicsUnit.Point);
             title.ForeColor = Color.Black;
             title.Location = new Point(26, 9);
-            title.Name = "label2";
+            title.Name = "title";
             title.Size = new Size(257, 95);
             title.TabIndex = 7;
             title.Text = "Krusty's Treasure Hunt";
             title.TextAlign = ContentAlignment.MiddleCenter;
             title.Click += label2_Click;
             // 
-            // checkBox1
+            // checkTSP
             // 
             checkTSP.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             checkTSP.AutoSize = true;
             checkTSP.Location = new Point(12, 216);
-            checkTSP.Name = "checkBox1";
+            checkTSP.Name = "checkTSP";
             checkTSP.Size = new Size(45, 19);
             checkTSP.TabIndex = 3;
             checkTSP.Text = "TSP";
             checkTSP.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // dfsButton
             // 
             dfsButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dfsButton.AutoSize = true;
             dfsButton.Location = new Point(12, 191);
-            dfsButton.Name = "radioButton2";
+            dfsButton.Name = "dfsButton";
             dfsButton.Size = new Size(44, 19);
             dfsButton.TabIndex = 6;
             dfsButton.TabStop = true;
@@ -208,35 +232,35 @@ namespace maze
             dfsButton.UseVisualStyleBackColor = true;
             dfsButton.CheckedChanged += radioButton2_CheckedChanged;
             // 
-            // radioButton1
+            // bfsButton
             // 
             bfsButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             bfsButton.AutoSize = true;
             bfsButton.Location = new Point(12, 166);
-            bfsButton.Name = "radioButton1";
+            bfsButton.Name = "bfsButton";
             bfsButton.Size = new Size(45, 19);
             bfsButton.TabIndex = 5;
             bfsButton.TabStop = true;
             bfsButton.Text = "DFS";
             bfsButton.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // buttonBrowse
             // 
             buttonBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             buttonBrowse.Location = new Point(243, 122);
-            buttonBrowse.Name = "button2";
+            buttonBrowse.Name = "buttonBrowse";
             buttonBrowse.Size = new Size(57, 23);
             buttonBrowse.TabIndex = 4;
             buttonBrowse.Text = "browse";
             buttonBrowse.UseVisualStyleBackColor = true;
             buttonBrowse.Click += button2_Click;
             // 
-            // fileNameBox
+            // textBoxFileName
             // 
             textBoxFileName.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBoxFileName.ForeColor = Color.Gray;
             textBoxFileName.Location = new Point(12, 122);
-            textBoxFileName.Name = "fileNameBox";
+            textBoxFileName.Name = "textBoxFileName";
             textBoxFileName.Size = new Size(225, 23);
             textBoxFileName.TabIndex = 3;
             textBoxFileName.Text = "e.g : \"text.txt\"";
@@ -247,7 +271,6 @@ namespace maze
             // openFileDialog1
             // 
             openFileDialog1.FileName = "openFileDialog1";
-            openFileDialog1.InitialDirectory = "\\\\?\\C:\\Users\\ASUS\\AppData\\Local\\Microsoft\\VisualStudio\\17.0_d766b991\\WinFormsDesigner\\lvwruyqy.2s1\\..\\..\\..\\test\\";
             openFileDialog1.FileOk += openFileDialog1_FileOk;
             // 
             // timer1
@@ -255,25 +278,16 @@ namespace maze
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
-            // trackBar1
+            // button1
             // 
-            trackProgress.Location = new Point(12, 266);
-            trackProgress.Name = "trackBar1";
-            trackProgress.Size = new Size(288, 45);
-            trackProgress.TabIndex = 10;
-            trackProgress.TickStyle = TickStyle.Both;
-
-            // 
-            // checkBox2
-            // 
-            checkProgress.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            checkProgress.AutoSize = true;
-            checkProgress.Location = new Point(11, 241);
-            checkProgress.Name = "checkBox2";
-            checkProgress.Size = new Size(91, 19);
-            checkProgress.TabIndex = 11;
-            checkProgress.Text = "Progress Bar";
-            checkProgress.UseVisualStyleBackColor = true;
+            button_start.Anchor = AnchorStyles.Bottom;
+            button_start.Location = new Point(206, 361);
+            button_start.Name = "button1";
+            button_start.Size = new Size(75, 23);
+            button_start.TabIndex = 3;
+            button_start.Text = "Start";
+            button_start.UseVisualStyleBackColor = true;
+            button_start.Click += button_start_Click;
             // 
             // Form1
             // 
@@ -282,8 +296,8 @@ namespace maze
             ClientSize = new Size(800, 451);
             Controls.Add(splitContainer1);
             Name = "Form1";
-            Text = "Form1";
-            Load += Form1_Load_1;
+            Text = "Krusty's Treasure Hunt";
+            Load += Form1_Load;
             ResizeEnd += resizeCell;
             Resize += resizeCell;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
@@ -310,12 +324,16 @@ namespace maze
         private RadioButton bfsButton;
         private CheckBox checkTSP;
         private Label title;
-        private const string emptyInputString = "e.g : \"text.txt\"";
         private OpenFileDialog openFileDialog1;
         private Label labelOutput;
         private Label labelLoadSuccess;
         private System.Windows.Forms.Timer timer1;
         private CheckBox checkProgress;
         private TrackBar trackProgress;
+        private Solver solver;
+        private bool isLoaded;
+        private const string emptyInputString = "e.g : \"text.txt\"";
+        private string projectRoot;
+        private Button button_start;
     }
 }
