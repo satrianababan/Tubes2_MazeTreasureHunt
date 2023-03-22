@@ -12,7 +12,7 @@ namespace maze
 
         public char[,]? maze { get; }
         public Coordinate start;
-        public List<Coordinate> listTreasure;
+        public HashSet<Coordinate> listTreasure = new HashSet<Coordinate>();
         public int rowLen { get; }
         public int colLen { get; }
 
@@ -51,13 +51,13 @@ namespace maze
             }
         }
 
-        List<Coordinate> solveByDFS() 
+        public List<Coordinate> solveByDFS() 
         {
             // TO DO
             List<Coordinate> res = new List<Coordinate>();
             return res;
         }
-        List<Coordinate> solveByBFS() 
+        public List<Coordinate> solveByBFS() 
         {
             // TO DO
             List<Coordinate> res = new List<Coordinate>();
