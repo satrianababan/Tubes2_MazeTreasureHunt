@@ -91,7 +91,7 @@ namespace maze
                     }
                     i++;
                 }
-                solver = new Solver(matrix, rowLen, colLen);
+                solver = new Solver(matrix, rowLen, colLen, this);
                 dataGridView1.RowCount = rowLen;
                 dataGridView1.ColumnCount = colLen;
                 for (int i = 0; i < rowLen; i++)

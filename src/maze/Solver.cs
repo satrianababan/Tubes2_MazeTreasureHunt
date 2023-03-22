@@ -15,6 +15,7 @@ namespace maze
         public HashSet<Coordinate> setTreasure = new HashSet<Coordinate>();
         public int rowLen { get; }
         public int colLen { get; }
+        public Form1? form;
 
         public Solver()
         {
@@ -31,7 +32,7 @@ namespace maze
             start = new Coordinate(0,0);
         }
 
-        public Solver(char[,] mat, int rowLen, int colLen)
+        public Solver(char[,] mat, int rowLen, int colLen, Form1 form)
         {
             this.maze = mat;
             this.rowLen = rowLen;
@@ -49,6 +50,7 @@ namespace maze
                     }
                 }
             }
+            this.form = form;
         }
 
         public List<Coordinate> solveByDFS() 
