@@ -10,25 +10,41 @@ namespace maze
     {
 
         public char[,]? maze { get; }
-        public int n { get; }
+        public Coordinate start;
+        public int rowLen { get; }
+        public int colLen { get; }
 
-        Solver()
+        public Solver()
         {
             maze = new char[10, 10];
-            this.n = 10;
+            this.rowLen = 10;
+            this.colLen = 10;
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    maze[i, j] = '.';
+                    maze[i, j] = 'R';
                 }
             }
+            start = new Coordinate(0,0);
         }
 
-        Solver(char[,] m, int n)
+        public Solver(char[,] mat, int rowLen, int colLen)
         {
-            this.maze = m;
-            this.n = n;
+            this.maze = mat;
+            this.rowLen = rowLen;
+            this.colLen = colLen;
+            for (int i = 0;i < rowLen; i++)
+            {
+                for (int j = 0;j < colLen; j++)
+                {
+                    if (mat[i,j] == 'K')
+                    {
+                        start = new Coordinate(i, j);
+                        return;
+                    }
+                }
+            }
         }
 
         List<Coordinate> solveByDFS() 
