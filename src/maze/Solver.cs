@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace maze
 
         public char[,]? maze { get; }
         public Coordinate start;
+        public List<Coordinate> listTreasure;
         public int rowLen { get; }
         public int colLen { get; }
 
@@ -41,7 +43,9 @@ namespace maze
                     if (mat[i,j] == 'K')
                     {
                         start = new Coordinate(i, j);
-                        return;
+                    } else if (mat[i,j] == 'T')
+                    {
+                        listTreasure.Add(new Coordinate(i, j));
                     }
                 }
             }
