@@ -12,7 +12,7 @@ namespace maze
 
         public char[,]? maze { get; }
         public Coordinate start;
-        public HashSet<Coordinate> listTreasure = new HashSet<Coordinate>();
+        public HashSet<Coordinate> setTreasure = new HashSet<Coordinate>();
         public int rowLen { get; }
         public int colLen { get; }
 
@@ -45,7 +45,7 @@ namespace maze
                         start = new Coordinate(i, j);
                     } else if (mat[i,j] == 'T')
                     {
-                        listTreasure.Add(new Coordinate(i, j));
+                        setTreasure.Add(new Coordinate(i, j));
                     }
                 }
             }
