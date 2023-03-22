@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -65,7 +67,8 @@ namespace maze
                 }
                 System.Diagnostics.Debug.WriteLine("");
             }
-
+            List<Coordinate> res = new List<Coordinate>();
+            var prevStart = start;
             Coordinate[,] prev = new Coordinate[rowLen, colLen];
             var dikunjungi = new bool[rowLen, colLen];
             var stack = new Stack<Coordinate>();
@@ -79,6 +82,22 @@ namespace maze
                 }
                 dikunjungi[now.y, now.x] = true;
                 Form1.colorCell(now.y, now.x, Color.Blue);
+
+                if (maze[now.y, now.x] == 'T' && setTreasure.Contains(now))
+                {
+                    var tmp = now;
+                    var subRute = new List<Coordinate>();
+                    while (tmp != prevStart)
+                    {
+                        subRute.Add(tmp);
+                        tmp = prev[tmp.y, tmp.x];
+                    }
+                    subRute.Reverse();
+                    res.AddRange(subRute);
+                    dikunjungi = new bool[rowLen, colLen];
+                    setTreasure.Remove(now);
+                    prevStart = now;
+                }
                 if (now.y - 1 >= 0 && !dikunjungi[now.y - 1, now.x] && maze[now.y - 1, now.x] != 'X')
                 {
                     stack.Push(new Coordinate(now.x, now.y - 1));
@@ -101,7 +120,7 @@ namespace maze
                 }
             }
 
-            List<Coordinate> res = new List<Coordinate>();
+           
             return res;
         }
         public List<Coordinate> solveByBFS() 
@@ -124,7 +143,7 @@ namespace maze
                     continue;
                 visited[vertex.y,vertex.x] = true;  
 
-                if (maze[vertex.y,vertex.x] == 'T')
+                if (maze[vertex.y,vertex.x] == 'T' && setTreasure.Contains(vertex))
                 {
                     var tmp = vertex;
                     var subRute = new List<Coordinate>();
@@ -135,6 +154,7 @@ namespace maze
                     subRute.Reverse();
                     rute.AddRange(subRute);
                     visited = new bool[rowLen, colLen];
+                    setTreasure.Remove(vertex);
                     prevStart = vertex;
                 }
 
