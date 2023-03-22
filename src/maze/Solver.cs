@@ -43,10 +43,10 @@ namespace maze
                 {
                     if (mat[i,j] == 'K')
                     {
-                        start = new Coordinate(i, j);
+                        start = new Coordinate(j, i);
                     } else if (mat[i,j] == 'T')
                     {
-                        setTreasure.Add(new Coordinate(i, j));
+                        setTreasure.Add(new Coordinate(j, i));
                     }
                 }
             }
@@ -56,6 +56,51 @@ namespace maze
         public List<Coordinate> solveByDFS() 
         {
             // TO DO
+            Console.WriteLine(1);
+            for (int i = 0; i < rowLen; i++)
+            {
+                for (int j = 0; j < colLen; j++)
+                {
+                    System.Diagnostics.Debug.Write(maze[i, j]);
+                }
+                System.Diagnostics.Debug.WriteLine("");
+            }
+
+            Coordinate[,] prev = new Coordinate[rowLen, colLen];
+            var dikunjungi = new bool[rowLen, colLen];
+            var stack = new Stack<Coordinate>();
+            stack.Push(start);
+            while (stack.Count() > 0)
+            {
+                var now = stack.Pop();
+                if (dikunjungi[now.y, now.x])
+                {
+                    continue;
+                }
+                dikunjungi[now.y, now.x] = true;
+                Form1.colorCell(now.y, now.x, Color.Blue);
+                if (now.y - 1 >= 0 && !dikunjungi[now.y - 1, now.x] && maze[now.y - 1, now.x] != 'X')
+                {
+                    stack.Push(new Coordinate(now.x, now.y - 1));
+                    prev[now.y - 1, now.x] = now;
+                }
+                if (now.x - 1 >= 0 && !dikunjungi[now.y, now.x - 1] && maze[now.y, now.x - 1] != 'X')
+                {
+                    stack.Push(new Coordinate(now.x - 1, now.y));
+                    prev[now.y, now.x - 1] = now;
+                }
+                if (now.y + 1 < rowLen && !dikunjungi[now.y + 1, now.x] && maze[now.y + 1, now.x] != 'X')
+                {
+                    stack.Push(new Coordinate(now.x, now.y + 1));
+                    prev[now.y + 1, now.x] = now;
+                }
+                if (now.x + 1 < colLen && !dikunjungi[now.y, now.x + 1] && maze[now.y, now.x + 1] != 'X')
+                {
+                    stack.Push(new Coordinate(now.x + 1, now.y));
+                    prev[now.y, now.x + 1] = now;
+                }
+            }
+
             List<Coordinate> res = new List<Coordinate>();
             return res;
         }
