@@ -62,32 +62,59 @@ namespace maze
         public List<Coordinate> solveByBFS() 
         {
             // TO DO
-            var visited = new HashSet<Coordinate>();
+            var visited = new bool[rowLen,colLen];
 
             var queue = new Queue<Coordinate>();
             queue.Enqueue(start);
             
+            var prevCoor = new Coordinate[rowLen, colLen];
+            var prevStart = start;
+            List<Coordinate> rute = new List<Coordinate>();
+
             while(queue.Count > 0)
             {
                 var vertex = queue.Dequeue();
 
-                if (visited.Contains(vertex))
+                if (visited[vertex.y,vertex.x])
                     continue;
-                visited.Add(vertex);
+                visited[vertex.y,vertex.x] = true;  
 
-                if ((vertex.x + 1 < colLen) && !visited.Contains(new Coordinate(vertex.x + 1, vertex.y)) && (maze[vertex.x+1,vertex.y] != 'X'))
-                    queue.Enqueue(new Coordinate(vertex.x + 1, vertex.y));
-                if ((vertex.y + 1 < rowLen) && !visited.Contains(new Coordinate(vertex.x, vertex.y + 1)) && (maze[vertex.x, vertex.y + 1] != 'X'))
-                    queue.Enqueue(new Coordinate(vertex.x, vertex.y + 1));
-                if ((vertex.x - 1 > 0) && !visited.Contains(new Coordinate(vertex.x - 1, vertex.y)) && (maze[vertex.x - 1, vertex.y] != 'X'))
-                    queue.Enqueue(new Coordinate(vertex.x - 1, vertex.y));
-                if ((vertex.y - 1 > 0) && !visited.Contains(new Coordinate(vertex.x, vertex.y - 1)) && (maze[vertex.x, vertex.y - 1] != 'X'))
-                    queue.Enqueue(new Coordinate(vertex.x, vertex.y - 1));
+                if (maze[vertex.y,vertex.x] == 'T')
+                {
+                    var tmp = vertex;
+                    var subRute = new List<Coordinate>();
+                    while(tmp != prevStart) {
+                        subRute.Add(tmp);
+                        tmp = prevCoor[tmp.y,tmp.x];
+                    }
+                    subRute.Reverse();
+                    rute.AddRange(subRute);
+                    visited = new bool[rowLen, colLen];
+                    prevStart = vertex;
+                }
+
+                if ((vertex.x + 1 < colLen) && !visited[vertex.y, vertex.x + 1] && (maze[vertex.y,vertex.x + 1] != 'X'))
+                {
+                    queue.Enqueue(new Coordinate(vertex.y, vertex.x + 1));
+                prevCoor[vertex.y, vertex.x + 1] = vertex;
+                }
+                if ((vertex.y + 1 < rowLen) && !visited[vertex.y + 1, vertex.x] && (maze[vertex.y + 1, vertex.x] != 'X'))
+                {
+                    queue.Enqueue(new Coordinate(vertex.y + 1, vertex.x));
+                prevCoor[vertex.y + 1, vertex.x] = vertex;
+                }
+                if ((vertex.y - 1 > 0) && !visited[vertex.y - 1, vertex.x] && (maze[vertex.y -1 , vertex.x] != 'X'))
+                {
+                    queue.Enqueue(new Coordinate(vertex.y - 1, vertex.x));
+                prevCoor[vertex.y - 1, vertex.x] = vertex;
+                }
+                if ((vertex.x - 1 > 0) && !visited[vertex.y, vertex.x - 1] && (maze[vertex.y, vertex.x - 1] != 'X'))
+                {
+                    queue.Enqueue(new Coordinate(vertex.y, vertex.x - 1));
+                    prevCoor[vertex.y, vertex.x - 1] = vertex;
+                }
             }
-            List<Coordinate> res = new List<Coordinate>();
-
-
-            return res;
+            return rute;
         }
     }
 }
