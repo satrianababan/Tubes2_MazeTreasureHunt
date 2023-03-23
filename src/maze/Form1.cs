@@ -1,3 +1,9 @@
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
 namespace maze
 {
     public partial class Form1 : Form
@@ -48,27 +54,68 @@ namespace maze
 
         }
 
-
-        public void colorCell(int i, int j, Color c)
+        private void clearDataGridView()
         {
-            dataGridView1[j, i].Style.BackColor = c;
+            dataGridView1.Rows.Clear();
+            dataGridView1.Columns.Clear();
+            dataGridView1.Refresh();
         }
 
-        public void clearCellColor()
+        private void colorCell(int row, int col, Color c)
+        {
+            dataGridView1[col, row].Style.BackColor = c;
+        }
+
+        private void colorPath(List<Coordinate> coordinates)
+        {
+            clearCellColor();
+            foreach (var c in coordinates)
+            {
+                int col = c.x;
+                int row = c.y;
+                Color oldColor = dataGridView1[col, row].Style.BackColor;
+                if (oldColor == Color.White)
+                {
+                    colorCell(row, col, Color.LightGreen);
+                }
+                else if (oldColor == Color.LightGreen)
+                {
+                    colorCell(row, col, Color.Green);
+                }
+                else
+                {
+                    colorCell(row, col, Color.DarkGreen);
+                }
+            }
+        }
+        private void clearCellColor()
         {
             for (int i = 0; i < dataGridView1.RowCount; i++)
             {
                 for (int j = 0; j < dataGridView1.ColumnCount; j++)
                 {
-                    dataGridView1[j, i].Style.BackColor = Color.White;
+                    if (dataGridView1[j, i].Style.BackColor != Color.Black)
+                        dataGridView1[j, i].Style.BackColor = Color.White;
                 }
             }
         }
 
+        private void clearTextInfo()
+        {
+            textBox_nodes.Clear();
+            textBox_exec_time.Clear();
+            textBox_route.Clear();
+            textBox_steps.Clear();
+        }
+        private void clearAllInfo()
+        {
+            clearDataGridView();
+            clearTextInfo();
+        }
+
         private void visualizeMap(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Clear();
-            dataGridView1.Refresh();
+            clearAllInfo();
             try
             {
                 string fullDir;
@@ -106,8 +153,8 @@ namespace maze
                     }
                 }
                 solver = new Solver(matrix, rowLen, colLen);
-                dataGridView1.RowCount = rowLen;
                 dataGridView1.ColumnCount = colLen;
+                dataGridView1.RowCount = rowLen;
                 for (int i = 0; i < rowLen; i++)
                 {
                     for (int j = 0; j < colLen; j++)
@@ -138,7 +185,7 @@ namespace maze
 
 
             }
-            catch (FileNotFoundException)
+            catch (IOException)
             {
                 labelLoadSuccess.Text = "Load failed";
                 labelLoadSuccess.ForeColor = Color.Red;
@@ -156,6 +203,11 @@ namespace maze
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            dataGridView1.ClearSelection();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -227,10 +279,13 @@ namespace maze
             if (trackProgress.Enabled)
             {
                 trackProgress.Enabled = false;
+                label_interval.Enabled = false;
             }
             else
             {
                 trackProgress.Enabled = true;
+                label_interval.Enabled = true;
+
             }
         }
 
@@ -279,28 +334,28 @@ namespace maze
 
         private void button_start_Click(object sender, EventArgs e)
         {
-            textBox_route.Text = "";
-            textBox_nodes.Text = "";
-            textBox_steps.Text = "";
-            textBox_exec_time.Text = "";
-            System.Diagnostics.Debug.WriteLine(dfsButton.Checked);
-            System.Diagnostics.Debug.WriteLine(bfsButton.Checked);
+            if (!isLoaded) return;
+            if (!isButtonStart())
+            {
+                backgroundWorkerColoring.CancelAsync();
+                label_progress.Text = "Pending cancelation...";
+                return;
+            }
+            clearTextInfo();
+            clearCellColor();
             PathResult result;
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             if (dfsButton.Checked)
             {
                 result = solver.solveByDFS(checkTSP.Checked);
             }
-            else if (bfsButton.Checked)
+            else
             {
                 System.Diagnostics.Debug.WriteLine("BFS");
                 result = solver.solveByBFS(checkTSP.Checked);
             }
-            else
-            {
-                return;
-            }
-            System.Diagnostics.Debug.WriteLine(result.path[0]);
-
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
             for (int i = 1; i < result.path.Count; i++)
             {
                 System.Diagnostics.Debug.WriteLine(result.path[i]);
@@ -331,11 +386,23 @@ namespace maze
                     throw new Exception("Path tidak valid!");
                 }
             }
-            System.Diagnostics.Debug.WriteLine("---------------");
-
-            foreach (var c in result.searchOrder)
+            textBox_exec_time.Text = elapsedMs + " ms";
+            textBox_nodes.Text = result.searchOrder.Count.ToString();
+            textBox_steps.Text = (result.path.Count - 1).ToString();
+            if (checkProgress.Checked)
             {
-                System.Diagnostics.Debug.WriteLine(c);
+                object[] args = new object[] { result.searchOrder, result.path, trackProgress.Value };
+                switchButtonStartAndStop();
+                buttonVisualize.Enabled = false;
+                progressBar1.Value = 0;
+                progressBar1.Visible = true;
+                label_progress.Visible = true;
+                label_progress.Text = "Progress";
+                backgroundWorkerColoring.RunWorkerAsync(argument: args);
+            }
+            else
+            {
+                colorPath(result.path);
             }
         }
 
@@ -345,6 +412,93 @@ namespace maze
         }
 
         private void label2_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            object[] parameters = e.Argument as object[];
+            var listSearched = (List<Coordinate>)parameters[0];
+            var listPath = (List<Coordinate>)parameters[1];
+            var interval = (int)parameters[2];
+            var worker = (BackgroundWorker)sender;
+            int cnt = 0;
+            foreach (var c in listSearched)
+            {
+                if (worker.CancellationPending)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                int row = c.y;
+                int col = c.x;
+                var oldColor = dataGridView1[c.x, c.y].Style.BackColor;
+                if (oldColor == Color.White)
+                {
+                    colorCell(row, col, Color.LightSkyBlue);
+                }
+                else if (oldColor == Color.LightSkyBlue)
+                {
+                    colorCell(row, col, Color.Blue);
+                }
+                else
+                {
+                    colorCell(row, col, Color.DarkBlue);
+                }
+                cnt++;
+                worker.ReportProgress((int)(cnt / (double)listSearched.Count * 100));
+                Thread.Sleep(interval);
+            }
+            e.Result = listPath;
+        }
+
+        private void switchButtonStartAndStop()
+        {
+            if (isButtonStart())
+                button_start.Text = "Stop";
+            else
+                button_start.Text = "Start";
+
+        }
+        private bool isButtonStart()
+        {
+            return button_start.Text == "Start";
+        }
+
+        private void backgroundWorkerColoring_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                // handle the error
+            }
+            else if (e.Cancelled == true)
+            {
+
+            }
+            else
+            {
+                var listPath = (List<Coordinate>)e.Result;
+                colorPath(listPath);
+
+
+            }
+            buttonVisualize.Enabled = true;
+            switchButtonStartAndStop();
+            progressBar1.Visible = false;
+            label_progress.Visible = false;
+        }
+
+        private void backgroundWorkerColoring_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar1.Value = e.ProgressPercentage;
+        }
+        private void trackProgress_ValueChanged(object sender, EventArgs e)
+        {
+            label_interval.Text = "Interval : " + trackProgress.Value + " ms";
+        }
+
+        private void label1_Click_1(object sender, EventArgs e)
         {
 
         }
