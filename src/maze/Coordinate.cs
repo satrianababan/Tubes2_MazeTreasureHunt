@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace maze
+﻿namespace maze
 {
     internal class Coordinate
     {
@@ -30,6 +24,22 @@ namespace maze
         public void printDebugln()
         {
             System.Diagnostics.Debug.WriteLine(this);
+        }
+
+        public bool Equals(Coordinate other)
+        {
+            return x == other.x && y == other.y;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            else
+            {
+                Coordinate objAsPart = obj as Coordinate;
+                if (objAsPart == null) return false;
+                else return Equals(objAsPart);
+            }
         }
     }
 }
