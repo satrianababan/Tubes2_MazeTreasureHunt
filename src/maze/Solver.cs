@@ -57,6 +57,7 @@
 			while (stack.Count > 0)
 			{
 				var now = stack.Peek();
+				searchOrder.Add(now);
 				path.Add(now);       
 				if (tmpMaze[now.y, now.x] == 'T')
 				{
@@ -67,36 +68,22 @@
 				{
 					if (now.x + 1 < colLen && !dikunjungi[now.y, now.x + 1] && tmpMaze[now.y, now.x + 1] != 'X')
 					{
-						var next = new Coordinate(now.x + 1, now.y);
-
-                        stack.Push(next);
-                        searchOrder.Add(next);
-
-                        dikunjungi[now.y, now.x + 1] = true;
+						stack.Push(new Coordinate(now.x + 1, now.y));
+						dikunjungi[now.y, now.x + 1] = true;
 					}
 					else if (now.y + 1 < rowLen && !dikunjungi[now.y + 1, now.x] && tmpMaze[now.y + 1, now.x] != 'X')
 					{
-                        var next = new Coordinate(now.x, now.y+1);
-
-                        stack.Push(next);
-                        searchOrder.Add(next);
-
-                        dikunjungi[now.y + 1, now.x] = true;
+						stack.Push(new Coordinate(now.x, now.y + 1));
+						dikunjungi[now.y + 1, now.x] = true;
 					}
 					else if (now.x - 1 >= 0 && !dikunjungi[now.y, now.x - 1] && tmpMaze[now.y, now.x - 1] != 'X')
 					{
-                        var next = new Coordinate(now.x - 1, now.y);
-
-                        stack.Push(next);
-                        searchOrder.Add(next);
-
-                        dikunjungi[now.y, now.x - 1] = true;
+						stack.Push(new Coordinate(now.x - 1, now.y));
+						dikunjungi[now.y, now.x - 1] = true;
 					}
 					else if (now.y - 1 >= 0 && !dikunjungi[now.y - 1, now.x] && tmpMaze[now.y - 1, now.x] != 'X')
 					{
-                        var next = new Coordinate(now.x, now.y-1);
-                        stack.Push(next);
-						searchOrder.Add(next);
+						stack.Push(new Coordinate(now.x, now.y - 1));
 						dikunjungi[now.y - 1, now.x] = true;
 					}
 					else
@@ -132,11 +119,16 @@
 			int foundTreasure = 0;
 
 			queue.Enqueue(start);
-			visited[start.y, start.x] = true;
 			rute.Add(start);
 			while (queue.Count > 0)
 			{
 				var vertex = queue.Dequeue();
+				if (visited[vertex.y, vertex.x])
+				{
+					continue;
+				}
+				visited[vertex.y, vertex.x] = true;
+                searchOrder.Add(vertex);
                 if (tmpMaze[vertex.y,vertex.x] == 'T')
 				{
 
@@ -176,35 +168,23 @@
                 }
 				if ((vertex.x + 1 < colLen) && !visited[vertex.y, vertex.x + 1] && (tmpMaze[vertex.y, vertex.x + 1] != 'X'))
 				{
-					var next = new Coordinate(vertex.x + 1, vertex.y);
-                    queue.Enqueue(next);
-                    searchOrder.Add(next);
-                    prevCoor[vertex.y, vertex.x + 1] = vertex;
-					visited[vertex.y, vertex.x + 1] = true;
+					queue.Enqueue(new Coordinate(vertex.x + 1, vertex.y));
+					prevCoor[vertex.y, vertex.x + 1] = vertex;
 				}
 				if ((vertex.y + 1 < rowLen) && !visited[vertex.y + 1, vertex.x] && (tmpMaze[vertex.y + 1, vertex.x] != 'X'))
 				{
-					var next = new Coordinate(vertex.x, vertex.y + 1);
-                    queue.Enqueue(next);
-                    searchOrder.Add(next);
+					queue.Enqueue(new Coordinate(vertex.x, vertex.y + 1));
 					prevCoor[vertex.y + 1, vertex.x] = vertex;
-					visited[vertex.y + 1, vertex.x] = true;
 				}
                 if ((vertex.x - 1 >= 0) && !visited[vertex.y, vertex.x - 1] && (tmpMaze[vertex.y, vertex.x - 1] != 'X'))
                 {
-                    var next = new Coordinate(vertex.x - 1, vertex.y);
-                    queue.Enqueue(next);
-                    searchOrder.Add(next);
+                    queue.Enqueue(new Coordinate(vertex.x - 1, vertex.y));
                     prevCoor[vertex.y, vertex.x - 1] = vertex;
-                    visited[vertex.y, vertex.x - 1] = true;
                 }
                 if ((vertex.y - 1 >= 0) && !visited[vertex.y - 1, vertex.x] && (tmpMaze[vertex.y - 1, vertex.x] != 'X'))
 				{
-                    var next = new Coordinate(vertex.x, vertex.y-1);
-                    queue.Enqueue(next);
-                    searchOrder.Add(next);
-                    prevCoor[vertex.y - 1, vertex.x] = vertex;
-					visited[vertex.y - 1, vertex.x] = true;
+					queue.Enqueue(new Coordinate(vertex.x, vertex.y - 1));
+					prevCoor[vertex.y - 1, vertex.x] = vertex;
 				}
 
 			}

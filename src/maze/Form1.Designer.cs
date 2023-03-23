@@ -32,6 +32,7 @@
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             dataGridView1 = new DataGridView();
             buttonVisualize = new Button();
             panel1 = new Panel();
@@ -79,6 +80,7 @@
             dataGridView1.AllowUserToResizeRows = false;
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView1.BackgroundColor = Color.CadetBlue;
             dataGridView1.BorderStyle = BorderStyle.None;
             dataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.Raised;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -119,19 +121,20 @@
             // buttonVisualize
             // 
             buttonVisualize.Anchor = AnchorStyles.Bottom;
+            buttonVisualize.BackColor = Color.LightBlue;
             buttonVisualize.Location = new Point(101, 463);
             buttonVisualize.Name = "buttonVisualize";
             buttonVisualize.Size = new Size(100, 34);
             buttonVisualize.TabIndex = 1;
             buttonVisualize.Text = "Visualize";
-            buttonVisualize.UseVisualStyleBackColor = true;
+            buttonVisualize.UseVisualStyleBackColor = false;
             buttonVisualize.Click += visualizeMap;
             // 
             // panel1
             // 
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panel1.BackColor = SystemColors.ControlDark;
+            panel1.BackColor = Color.CadetBlue;
             panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(dataGridView1);
             panel1.Location = new Point(0, 0);
@@ -204,18 +207,19 @@
             // 
             label_progress.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label_progress.ForeColor = SystemColors.ControlText;
-            label_progress.Location = new Point(11, 324);
+            label_progress.Location = new Point(11, 329);
             label_progress.Name = "label_progress";
             label_progress.Size = new Size(204, 19);
             label_progress.TabIndex = 13;
-            label_progress.Text = "Progress (0/0)";
+            label_progress.Text = "Progress";
             label_progress.TextAlign = ContentAlignment.MiddleLeft;
             label_progress.Visible = false;
             // 
             // progressBar1
             // 
             progressBar1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            progressBar1.Location = new Point(13, 346);
+            progressBar1.ForeColor = SystemColors.GradientInactiveCaption;
+            progressBar1.Location = new Point(11, 351);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(285, 23);
             progressBar1.TabIndex = 12;
@@ -237,9 +241,9 @@
             checkProgress.AutoSize = true;
             checkProgress.Location = new Point(13, 241);
             checkProgress.Name = "checkProgress";
-            checkProgress.Size = new Size(91, 19);
+            checkProgress.Size = new Size(103, 19);
             checkProgress.TabIndex = 11;
-            checkProgress.Text = "Progress Bar";
+            checkProgress.Text = "Show progress";
             checkProgress.UseVisualStyleBackColor = true;
             checkProgress.CheckedChanged += switchTrackEnable;
             // 
@@ -259,6 +263,7 @@
             // trackProgress
             // 
             trackProgress.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            trackProgress.BackColor = Color.LightBlue;
             trackProgress.Enabled = false;
             trackProgress.Location = new Point(12, 281);
             trackProgress.Maximum = 5000;
@@ -269,6 +274,7 @@
             trackProgress.TickFrequency = 500;
             trackProgress.TickStyle = TickStyle.Both;
             trackProgress.Value = 100;
+            trackProgress.Scroll += trackProgress_Scroll;
             trackProgress.ValueChanged += trackProgress_ValueChanged;
             // 
             // labelAlgorithm
@@ -292,7 +298,7 @@
             title.Name = "title";
             title.Size = new Size(255, 95);
             title.TabIndex = 7;
-            title.Text = "Krusty's Treasure Hunt";
+            title.Text = "Maze Treasure Hunt";
             title.TextAlign = ContentAlignment.MiddleCenter;
             title.Click += label2_Click;
             // 
@@ -335,17 +341,19 @@
             // buttonBrowse
             // 
             buttonBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            buttonBrowse.BackColor = Color.LightBlue;
             buttonBrowse.Location = new Point(241, 122);
             buttonBrowse.Name = "buttonBrowse";
             buttonBrowse.Size = new Size(57, 23);
             buttonBrowse.TabIndex = 4;
             buttonBrowse.Text = "browse";
-            buttonBrowse.UseVisualStyleBackColor = true;
+            buttonBrowse.UseVisualStyleBackColor = false;
             buttonBrowse.Click += button2_Click;
             // 
             // textBoxFileName
             // 
             textBoxFileName.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBoxFileName.BackColor = SystemColors.Window;
             textBoxFileName.ForeColor = Color.Gray;
             textBoxFileName.Location = new Point(12, 122);
             textBoxFileName.Name = "textBoxFileName";
@@ -358,6 +366,7 @@
             // textBox_exec_time
             // 
             textBox_exec_time.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            textBox_exec_time.BackColor = Color.White;
             textBox_exec_time.BorderStyle = BorderStyle.FixedSingle;
             textBox_exec_time.Location = new Point(367, 463);
             textBox_exec_time.Name = "textBox_exec_time";
@@ -369,6 +378,7 @@
             // textBox_steps
             // 
             textBox_steps.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            textBox_steps.BackColor = Color.White;
             textBox_steps.BorderStyle = BorderStyle.FixedSingle;
             textBox_steps.Location = new Point(367, 418);
             textBox_steps.Name = "textBox_steps";
@@ -379,6 +389,7 @@
             // textBox_nodes
             // 
             textBox_nodes.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            textBox_nodes.BackColor = Color.White;
             textBox_nodes.BorderStyle = BorderStyle.FixedSingle;
             textBox_nodes.Location = new Point(75, 463);
             textBox_nodes.Name = "textBox_nodes";
@@ -389,6 +400,7 @@
             // textBox_route
             // 
             textBox_route.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBox_route.BackColor = Color.White;
             textBox_route.BorderStyle = BorderStyle.FixedSingle;
             textBox_route.Location = new Point(75, 418);
             textBox_route.Multiline = true;
@@ -440,12 +452,13 @@
             // button_start
             // 
             button_start.Anchor = AnchorStyles.Bottom;
+            button_start.BackColor = Color.LightBlue;
             button_start.Location = new Point(207, 389);
             button_start.Name = "button_start";
             button_start.Size = new Size(75, 23);
             button_start.TabIndex = 3;
             button_start.Text = "Start";
-            button_start.UseVisualStyleBackColor = true;
+            button_start.UseVisualStyleBackColor = false;
             button_start.Click += button_start_Click;
             // 
             // openFileDialog1
@@ -470,11 +483,13 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.Azure;
             ClientSize = new Size(800, 511);
             Controls.Add(splitContainer1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(750, 550);
             Name = "Form1";
-            Text = "Krusty's Treasure Hunt";
+            Text = "Maze's Treasure Hunt";
             Load += Form1_Load;
             ResizeEnd += resizeCell;
             Resize += resizeCell;

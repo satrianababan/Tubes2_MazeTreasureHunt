@@ -189,12 +189,15 @@ namespace maze
             {
                 labelLoadSuccess.Text = "Load failed";
                 labelLoadSuccess.ForeColor = Color.Red;
+                isLoaded = false;
+
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 labelLoadSuccess.Text = "File is not valid";
                 labelLoadSuccess.ForeColor = Color.Red;
+                isLoaded = false;
             }
             labelLoadSuccess.Show();
             timerLoadDialogue.Start();
@@ -434,21 +437,22 @@ namespace maze
                 int row = c.y;
                 int col = c.x;
                 var oldColor = dataGridView1[c.x, c.y].Style.BackColor;
-                if (oldColor == Color.White)
-                {
-                    colorCell(row, col, Color.LightSkyBlue);
-                }
-                else if (oldColor == Color.LightSkyBlue)
-                {
-                    colorCell(row, col, Color.Blue);
-                }
-                else
-                {
-                    colorCell(row, col, Color.DarkBlue);
-                }
+                colorCell(row, col, Color.Blue);
                 cnt++;
                 worker.ReportProgress((int)(cnt / (double)listSearched.Count * 100));
                 Thread.Sleep(interval);
+                if (oldColor == Color.White)
+                {
+                    colorCell(row, col, Color.FromArgb(255, 255, 128));
+                }
+                else if (oldColor == Color.FromArgb(255, 255, 128))
+                {
+                    colorCell(row, col, Color.FromArgb(255, 255, 0));
+                }
+                else
+                {
+                    colorCell(row, col, Color.FromArgb(204, 204, 0));
+                }
             }
             e.Result = listPath;
         }
@@ -499,6 +503,11 @@ namespace maze
         }
 
         private void label1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void trackProgress_Scroll(object sender, EventArgs e)
         {
 
         }
