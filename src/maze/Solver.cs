@@ -8,7 +8,6 @@
         public int totalTreasure = 0;
         public int rowLen { get; }
         public int colLen { get; }
-        public Form1? form;
 
         public Solver()
         {
@@ -24,7 +23,7 @@
             }
         }
 
-        public Solver(char[,] mat, int rowLen, int colLen, Form1 form)
+        public Solver(char[,] mat, int rowLen, int colLen)
         {
             this.maze = mat;
             this.rowLen = rowLen;
@@ -43,13 +42,13 @@
                     }
                 }
             }
-            this.form = form;
         }
 
-        public List<Coordinate> solveByDFS(bool isTSP) 
+        public PathResult solveByDFS(bool isTSP) 
         {
             char[,] tmpMaze = (char[,]) maze.Clone();
-            List<Coordinate> res = new List<Coordinate>();
+            List<Coordinate> path = new List<Coordinate>();
+            List<Coordinate> searchOrder = new List<Coordinate>();
             var dikunjungi = new bool[rowLen, colLen];
             var stack = new Stack<Coordinate>();
             int treasureFound = 0;
@@ -57,12 +56,11 @@
             while (stack.Count > 0)
             {
                 var now = stack.Peek();
-
-                if (dikunjungi[now.y, now.x])
+                if (!dikunjungi[now.y, now.x])
                 {
-                    continue;
+                    searchOrder.Add(now);
                 }
-                res.Add(now);
+                path.Add(now);
                 dikunjungi[now.y, now.x] = true;
                 if (tmpMaze[now.y, now.x] == 'T')
                 {
@@ -71,28 +69,23 @@
                 }
                 if (treasureFound < totalTreasure)
                 {
-                    bool adaYangDikunjungi = false;
-                    if (now.y - 1 >= 0 && !dikunjungi[now.y - 1, now.x] && tmpMaze[now.y - 1, now.x] != 'X')
-                    {
-                        stack.Push(new Coordinate(now.x, now.y - 1));
-                        adaYangDikunjungi = true;
-                    }
-                    if (now.x - 1 >= 0 && !dikunjungi[now.y, now.x - 1] && tmpMaze[now.y, now.x - 1] != 'X')
-                    {
-                        stack.Push(new Coordinate(now.x - 1, now.y));
-                        adaYangDikunjungi = true;
-                    }
-                    if (now.y + 1 < rowLen && !dikunjungi[now.y + 1, now.x] && tmpMaze[now.y + 1, now.x] != 'X')
-                    {
-                        stack.Push(new Coordinate(now.x, now.y + 1));
-                        adaYangDikunjungi = true;
-                    }
                     if (now.x + 1 < colLen && !dikunjungi[now.y, now.x + 1] && tmpMaze[now.y, now.x + 1] != 'X')
                     {
                         stack.Push(new Coordinate(now.x + 1, now.y));
-                        adaYangDikunjungi = true;
                     }
-                    if (!adaYangDikunjungi)
+                    else if (now.y + 1 < rowLen && !dikunjungi[now.y + 1, now.x] && tmpMaze[now.y + 1, now.x] != 'X')
+                    {
+                        stack.Push(new Coordinate(now.x, now.y + 1));
+                    }
+                    else if (now.x - 1 >= 0 && !dikunjungi[now.y, now.x - 1] && tmpMaze[now.y, now.x - 1] != 'X')
+                    {
+                        stack.Push(new Coordinate(now.x - 1, now.y));
+                    }
+                    else if (now.y - 1 >= 0 && !dikunjungi[now.y - 1, now.x] && tmpMaze[now.y - 1, now.x] != 'X')
+                    {
+                        stack.Push(new Coordinate(now.x, now.y - 1));
+                    }
+                    else
                     {
                         stack.Pop();
                     }
@@ -109,11 +102,13 @@
                 }
 
             }
-            return res;
+            PathResult pathResult = new PathResult(path,searchOrder);
+            return pathResult;
         }
-        public List<Coordinate> solveByBFS(bool isTSP) 
+        public PathResult solveByBFS(bool isTSP) 
         {
             List<Coordinate> rute = new List<Coordinate>();
+            List<Coordinate> searchOrder = new List<Coordinate>();
             char[,] tmpMaze = (char[,])maze.Clone();
             var visited = new bool[rowLen,colLen];
             var prevCoor = new Coordinate[rowLen, colLen];
@@ -128,6 +123,7 @@
 
                 if (visited[vertex.y,vertex.x])
                     continue;
+                searchOrder.Add(vertex);
                 visited[vertex.y,vertex.x] = true;  
 
                 if ((tmpMaze[vertex.y,vertex.x] == 'T') || 
@@ -182,7 +178,8 @@
                     prevCoor[vertex.y, vertex.x - 1] = vertex;
                 }
             }
-            return rute;
+            PathResult pathResult = new PathResult(rute,searchOrder);
+            return pathResult;
         }
     }
 }
