@@ -127,7 +127,6 @@
 			{
 				var vertex = queue.Dequeue();
 				searchOrder.Add(vertex);
-                System.Diagnostics.Debug.WriteLine("sekarang : " + vertex);
                 if (tmpMaze[vertex.y,vertex.x] == 'T')
 				{
 
@@ -140,7 +139,6 @@
 					}
 					if (foundTreasure == totalTreasure)
 					{
-                        System.Diagnostics.Debug.WriteLine("TREASURE HABIS");
                         if (isTSP)
 						{
 							goBack = true;
