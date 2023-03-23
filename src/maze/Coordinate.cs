@@ -11,6 +11,12 @@
             this.y = y;
         }
 
+        public Coordinate(Coordinate other)
+        {
+            this.x = other.x;
+            this.y = other.y;
+        }
+
         public override string ToString()
         {
 
@@ -40,6 +46,14 @@
                 if (objAsPart == null) return false;
                 else return Equals(objAsPart);
             }
+        }
+        public static bool operator==(Coordinate a, Coordinate b)
+        {
+            return a.Equals(b);
+        }
+        public static bool operator!=(Coordinate a, Coordinate b)
+        {
+            return !a.Equals(b);
         }
     }
 }
