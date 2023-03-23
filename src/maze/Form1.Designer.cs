@@ -1,6 +1,4 @@
-﻿using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-
-namespace maze
+﻿namespace maze
 {
     partial class Form1
     {
@@ -46,9 +44,17 @@ namespace maze
             bfsButton = new RadioButton();
             buttonBrowse = new Button();
             textBoxFileName = new TextBox();
-            openFileDialog1 = new OpenFileDialog();
-            timer1 = new System.Windows.Forms.Timer(components);
+            textBox_exec_time = new TextBox();
+            textBox_steps = new TextBox();
+            textBox_nodes = new TextBox();
+            textBox_route = new TextBox();
+            label_exec_ime = new Label();
+            label_step = new Label();
+            label_nodes = new Label();
+            label_route = new Label();
             button_start = new Button();
+            openFileDialog1 = new OpenFileDialog();
+            timerLoadDialogue = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
@@ -73,7 +79,7 @@ namespace maze
             dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersVisible = false;
             dataGridView1.RowTemplate.Height = 25;
-            dataGridView1.Size = new Size(328, 329);
+            dataGridView1.Size = new Size(328, 299);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
@@ -98,7 +104,7 @@ namespace maze
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(3);
-            panel1.Size = new Size(487, 355);
+            panel1.Size = new Size(487, 325);
             panel1.TabIndex = 2;
             panel1.Paint += panel1_Paint;
             // 
@@ -141,6 +147,14 @@ namespace maze
             // 
             // splitContainer1.Panel2
             // 
+            splitContainer1.Panel2.Controls.Add(textBox_exec_time);
+            splitContainer1.Panel2.Controls.Add(textBox_steps);
+            splitContainer1.Panel2.Controls.Add(textBox_nodes);
+            splitContainer1.Panel2.Controls.Add(textBox_route);
+            splitContainer1.Panel2.Controls.Add(label_exec_ime);
+            splitContainer1.Panel2.Controls.Add(label_step);
+            splitContainer1.Panel2.Controls.Add(label_nodes);
+            splitContainer1.Panel2.Controls.Add(label_route);
             splitContainer1.Panel2.Controls.Add(button_start);
             splitContainer1.Panel2.Controls.Add(panel1);
             splitContainer1.Panel2.RightToLeft = RightToLeft.No;
@@ -164,22 +178,23 @@ namespace maze
             // 
             // labelLoadSuccess
             // 
-            labelLoadSuccess.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            labelLoadSuccess.AutoSize = true;
+            labelLoadSuccess.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             labelLoadSuccess.ForeColor = Color.Green;
-            labelLoadSuccess.Location = new Point(105, 387);
+            labelLoadSuccess.Location = new Point(102, 387);
             labelLoadSuccess.Name = "labelLoadSuccess";
-            labelLoadSuccess.Size = new Size(93, 15);
+            labelLoadSuccess.Size = new Size(100, 15);
             labelLoadSuccess.TabIndex = 9;
             labelLoadSuccess.Text = "Load successfull";
+            labelLoadSuccess.TextAlign = ContentAlignment.MiddleCenter;
             labelLoadSuccess.Click += label3_Click_1;
             // 
             // trackProgress
             // 
+            trackProgress.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             trackProgress.Enabled = false;
-            trackProgress.Location = new Point(12, 266);
+            trackProgress.Location = new Point(3, 266);
             trackProgress.Name = "trackProgress";
-            trackProgress.Size = new Size(288, 45);
+            trackProgress.Size = new Size(297, 45);
             trackProgress.TabIndex = 10;
             trackProgress.TickStyle = TickStyle.Both;
             // 
@@ -223,12 +238,13 @@ namespace maze
             // 
             dfsButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dfsButton.AutoSize = true;
-            dfsButton.Location = new Point(12, 191);
+            dfsButton.Checked = true;
+            dfsButton.Location = new Point(13, 169);
             dfsButton.Name = "dfsButton";
-            dfsButton.Size = new Size(44, 19);
+            dfsButton.Size = new Size(45, 19);
             dfsButton.TabIndex = 6;
             dfsButton.TabStop = true;
-            dfsButton.Text = "BFS";
+            dfsButton.Text = "DFS";
             dfsButton.UseVisualStyleBackColor = true;
             dfsButton.CheckedChanged += radioButton2_CheckedChanged;
             // 
@@ -236,12 +252,11 @@ namespace maze
             // 
             bfsButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             bfsButton.AutoSize = true;
-            bfsButton.Location = new Point(12, 166);
+            bfsButton.Location = new Point(12, 191);
             bfsButton.Name = "bfsButton";
-            bfsButton.Size = new Size(45, 19);
+            bfsButton.Size = new Size(44, 19);
             bfsButton.TabIndex = 5;
-            bfsButton.TabStop = true;
-            bfsButton.Text = "DFS";
+            bfsButton.Text = "BFS";
             bfsButton.UseVisualStyleBackColor = true;
             // 
             // buttonBrowse
@@ -268,26 +283,108 @@ namespace maze
             textBoxFileName.GotFocus += RemoveText;
             textBoxFileName.LostFocus += AddText;
             // 
-            // openFileDialog1
+            // textBox_exec_time
             // 
-            openFileDialog1.FileName = "openFileDialog1";
-            openFileDialog1.FileOk += openFileDialog1_FileOk;
+            textBox_exec_time.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            textBox_exec_time.BorderStyle = BorderStyle.FixedSingle;
+            textBox_exec_time.Location = new Point(369, 405);
+            textBox_exec_time.Name = "textBox_exec_time";
+            textBox_exec_time.ReadOnly = true;
+            textBox_exec_time.Size = new Size(109, 23);
+            textBox_exec_time.TabIndex = 11;
+            textBox_exec_time.WordWrap = false;
             // 
-            // timer1
+            // textBox_steps
             // 
-            timer1.Interval = 1000;
-            timer1.Tick += timer1_Tick;
+            textBox_steps.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            textBox_steps.BorderStyle = BorderStyle.FixedSingle;
+            textBox_steps.Location = new Point(369, 360);
+            textBox_steps.Name = "textBox_steps";
+            textBox_steps.ReadOnly = true;
+            textBox_steps.Size = new Size(109, 23);
+            textBox_steps.TabIndex = 10;
             // 
-            // button1
+            // textBox_nodes
+            // 
+            textBox_nodes.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            textBox_nodes.BorderStyle = BorderStyle.FixedSingle;
+            textBox_nodes.Location = new Point(75, 405);
+            textBox_nodes.Name = "textBox_nodes";
+            textBox_nodes.ReadOnly = true;
+            textBox_nodes.Size = new Size(109, 23);
+            textBox_nodes.TabIndex = 9;
+            // 
+            // textBox_route
+            // 
+            textBox_route.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBox_route.BorderStyle = BorderStyle.FixedSingle;
+            textBox_route.Location = new Point(75, 360);
+            textBox_route.Multiline = true;
+            textBox_route.Name = "textBox_route";
+            textBox_route.ReadOnly = true;
+            textBox_route.ScrollBars = ScrollBars.Horizontal;
+            textBox_route.Size = new Size(208, 39);
+            textBox_route.TabIndex = 8;
+            textBox_route.WordWrap = false;
+            // 
+            // label_exec_ime
+            // 
+            label_exec_ime.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            label_exec_ime.Location = new Point(294, 405);
+            label_exec_ime.Name = "label_exec_ime";
+            label_exec_ime.Size = new Size(69, 36);
+            label_exec_ime.TabIndex = 7;
+            label_exec_ime.Text = "Execution  : time";
+            // 
+            // label_step
+            // 
+            label_step.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            label_step.Location = new Point(294, 362);
+            label_step.Name = "label_step";
+            label_step.Size = new Size(69, 15);
+            label_step.TabIndex = 6;
+            label_step.Text = "Steps          :";
+            label_step.Click += label2_Click_1;
+            // 
+            // label_nodes
+            // 
+            label_nodes.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            label_nodes.Location = new Point(3, 405);
+            label_nodes.Name = "label_nodes";
+            label_nodes.Size = new Size(66, 36);
+            label_nodes.TabIndex = 5;
+            label_nodes.Text = "Nodes      : Checked ";
+            // 
+            // label_route
+            // 
+            label_route.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            label_route.Location = new Point(3, 362);
+            label_route.Name = "label_route";
+            label_route.Size = new Size(66, 15);
+            label_route.TabIndex = 4;
+            label_route.Text = "Route       :";
+            label_route.Click += label_rute_Click;
+            // 
+            // button_start
             // 
             button_start.Anchor = AnchorStyles.Bottom;
-            button_start.Location = new Point(206, 361);
-            button_start.Name = "button1";
+            button_start.Location = new Point(208, 331);
+            button_start.Name = "button_start";
             button_start.Size = new Size(75, 23);
             button_start.TabIndex = 3;
             button_start.Text = "Start";
             button_start.UseVisualStyleBackColor = true;
             button_start.Click += button_start_Click;
+            // 
+            // openFileDialog1
+            // 
+            openFileDialog1.FileName = "openFileDialog1";
+            openFileDialog1.FileOk += openFileDialog1_FileOk;
+            // 
+            // timerLoadDialogue
+            // 
+            timerLoadDialogue.Interval = 1000;
+            timerLoadDialogue.Tick += timer1_TickStopLoadLabel;
             // 
             // Form1
             // 
@@ -305,6 +402,7 @@ namespace maze
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
+            splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)trackProgress).EndInit();
@@ -327,7 +425,7 @@ namespace maze
         private OpenFileDialog openFileDialog1;
         private Label labelOutput;
         private Label labelLoadSuccess;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timerLoadDialogue;
         private CheckBox checkProgress;
         private TrackBar trackProgress;
         private Solver solver;
@@ -335,5 +433,13 @@ namespace maze
         private const string emptyInputString = "e.g : \"text.txt\"";
         private string projectRoot;
         private Button button_start;
+        private Label label_route;
+        private Label label_step;
+        private Label label_nodes;
+        private Label label_exec_ime;
+        private TextBox textBox_exec_time;
+        private TextBox textBox_steps;
+        private TextBox textBox_nodes;
+        private TextBox textBox_route;
     }
 }

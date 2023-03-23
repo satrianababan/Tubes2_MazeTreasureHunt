@@ -49,13 +49,26 @@ namespace maze
         }
 
 
-        private void colorCell(int i, int j, Color c)
+        public void colorCell(int i, int j, Color c)
         {
             dataGridView1[j, i].Style.BackColor = c;
         }
 
+        public void clearCellColor()
+        {
+            for (int i = 0; i < dataGridView1.RowCount; i++)
+            {
+                for (int j = 0; j < dataGridView1.ColumnCount; j++)
+                {
+                    dataGridView1[j, i].Style.BackColor = Color.White;
+                }
+            }
+        }
+
         private void visualizeMap(object sender, EventArgs e)
         {
+            dataGridView1.Rows.Clear();
+            dataGridView1.Refresh();
             try
             {
                 string fullDir;
@@ -71,7 +84,7 @@ namespace maze
                 int rowLen = lines.Length;
                 if (rowLen == 0)
                 {
-                    throw new Exception("File tidak valid");
+                    throw new Exception("File kosong");
                 }
                 int colLen = (lines[0].Length + 1) / 2;
                 foreach (var line in lines)
@@ -79,7 +92,7 @@ namespace maze
                     System.Diagnostics.Debug.WriteLine(line.Length);
                     if (line.Length != lines[0].Length)
                     {
-                        throw new Exception("File tidak valid");
+                        throw new Exception("Banyak kolom tidak konsisten");
                     }
                 }
                 char[,] matrix = new char[rowLen, colLen];
@@ -88,10 +101,11 @@ namespace maze
                     for (int j = 0; j < colLen; j++)
                     {
                         matrix[i, j] = lines[i][j * 2];
+                        if (matrix[i, j] != 'K' && matrix[i, j] != 'R' && matrix[i, j] != 'X' && matrix[i, j] != 'T')
+                            throw new Exception("File tidak valid");
                     }
-                    i++;
                 }
-                solver = new Solver(matrix, rowLen, colLen, this);
+                solver = new Solver(matrix, rowLen, colLen);
                 dataGridView1.RowCount = rowLen;
                 dataGridView1.ColumnCount = colLen;
                 for (int i = 0; i < rowLen; i++)
@@ -118,24 +132,25 @@ namespace maze
                     }
                 }
                 resizeCell(sender, e);
-                labelLoadSuccess.Text = "Load successfull";
+                labelLoadSuccess.Text = "Load successful";
                 labelLoadSuccess.ForeColor = Color.Green;
                 isLoaded = true;
 
+
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException)
             {
                 labelLoadSuccess.Text = "Load failed";
                 labelLoadSuccess.ForeColor = Color.Red;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 labelLoadSuccess.Text = "File is not valid";
                 labelLoadSuccess.ForeColor = Color.Red;
             }
             labelLoadSuccess.Show();
-            timer1.Start();
+            timerLoadDialogue.Start();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -255,22 +270,83 @@ namespace maze
 
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void timer1_TickStopLoadLabel(object sender, EventArgs e)
         {
+            System.Windows.Forms.Timer timer = (System.Windows.Forms.Timer)sender;
+            timer.Stop();
             labelLoadSuccess.Hide();
-            timer1.Stop();
         }
 
         private void button_start_Click(object sender, EventArgs e)
         {
-            if (dfsButton.Enabled)
+            textBox_route.Text = "";
+            textBox_nodes.Text = "";
+            textBox_steps.Text = "";
+            textBox_exec_time.Text = "";
+            System.Diagnostics.Debug.WriteLine(dfsButton.Checked);
+            System.Diagnostics.Debug.WriteLine(bfsButton.Checked);
+            PathResult result;
+            if (dfsButton.Checked)
             {
-                solver.solveByDFS();
+                result = solver.solveByDFS(checkTSP.Checked);
+            }
+            else if (bfsButton.Checked)
+            {
+                System.Diagnostics.Debug.WriteLine("BFS");
+                result = solver.solveByBFS(checkTSP.Checked);
             }
             else
             {
-                solver.solveByBFS();
+                return;
             }
+            System.Diagnostics.Debug.WriteLine(result.path[0]);
+
+            for (int i = 1; i < result.path.Count; i++)
+            {
+                System.Diagnostics.Debug.WriteLine(result.path[i]);
+                if (i != 1)
+                {
+                    textBox_route.Text += '-';
+                }
+                Coordinate now = result.path[i];
+                Coordinate bef = result.path[i - 1];
+                if (now.x == bef.x + 1 && now.y == bef.y)
+                {
+                    textBox_route.Text += 'R';
+                }
+                else if (now.x == bef.x && now.y == bef.y + 1)
+                {
+                    textBox_route.Text += 'D';
+                }
+                else if (now.x == bef.x - 1 && now.y == bef.y)
+                {
+                    textBox_route.Text += 'L';
+                }
+                else if (now.x == bef.x && now.y == bef.y - 1)
+                {
+                    textBox_route.Text += 'U';
+                }
+                else
+                {
+                    throw new Exception("Path tidak valid!");
+                }
+            }
+            System.Diagnostics.Debug.WriteLine("---------------");
+
+            foreach (var c in result.searchOrder)
+            {
+                System.Diagnostics.Debug.WriteLine(c);
+            }
+        }
+
+        private void label_rute_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }
