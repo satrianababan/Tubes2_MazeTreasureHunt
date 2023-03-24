@@ -1,4 +1,6 @@
-﻿namespace maze
+﻿using System.Data.Common;
+
+namespace maze
 {
     partial class Form1
     {
@@ -63,6 +65,7 @@
             openFileDialog1 = new OpenFileDialog();
             timerLoadDialogue = new System.Windows.Forms.Timer(components);
             backgroundWorkerColoring = new System.ComponentModel.BackgroundWorker();
+            helpProvider1 = new HelpProvider();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
@@ -101,6 +104,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             dataGridView1.Location = new Point(81, 11);
+            dataGridView1.MinimumSize = new Size(326, 357);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
@@ -122,6 +126,7 @@
             // 
             buttonVisualize.Anchor = AnchorStyles.Bottom;
             buttonVisualize.BackColor = Color.LightBlue;
+            buttonVisualize.Cursor = Cursors.Hand;
             buttonVisualize.Location = new Point(101, 463);
             buttonVisualize.Name = "buttonVisualize";
             buttonVisualize.Size = new Size(100, 34);
@@ -239,6 +244,7 @@
             // 
             checkProgress.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             checkProgress.AutoSize = true;
+            checkProgress.Cursor = Cursors.Hand;
             checkProgress.Location = new Point(13, 241);
             checkProgress.Name = "checkProgress";
             checkProgress.Size = new Size(103, 19);
@@ -264,6 +270,7 @@
             // 
             trackProgress.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             trackProgress.BackColor = Color.LightBlue;
+            trackProgress.Cursor = Cursors.Hand;
             trackProgress.Enabled = false;
             trackProgress.Location = new Point(12, 281);
             trackProgress.Maximum = 5000;
@@ -271,7 +278,7 @@
             trackProgress.Name = "trackProgress";
             trackProgress.Size = new Size(286, 45);
             trackProgress.TabIndex = 10;
-            trackProgress.TickFrequency = 500;
+            trackProgress.TickFrequency = 1000;
             trackProgress.TickStyle = TickStyle.Both;
             trackProgress.Value = 100;
             trackProgress.Scroll += trackProgress_Scroll;
@@ -306,6 +313,7 @@
             // 
             checkTSP.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             checkTSP.AutoSize = true;
+            checkTSP.Cursor = Cursors.Hand;
             checkTSP.Location = new Point(13, 216);
             checkTSP.Name = "checkTSP";
             checkTSP.Size = new Size(45, 19);
@@ -318,6 +326,7 @@
             dfsButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dfsButton.AutoSize = true;
             dfsButton.Checked = true;
+            dfsButton.Cursor = Cursors.Hand;
             dfsButton.Location = new Point(13, 169);
             dfsButton.Name = "dfsButton";
             dfsButton.Size = new Size(45, 19);
@@ -331,6 +340,7 @@
             // 
             bfsButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             bfsButton.AutoSize = true;
+            bfsButton.Cursor = Cursors.Hand;
             bfsButton.Location = new Point(13, 191);
             bfsButton.Name = "bfsButton";
             bfsButton.Size = new Size(44, 19);
@@ -342,6 +352,7 @@
             // 
             buttonBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             buttonBrowse.BackColor = Color.LightBlue;
+            buttonBrowse.Cursor = Cursors.Hand;
             buttonBrowse.Location = new Point(241, 122);
             buttonBrowse.Name = "buttonBrowse";
             buttonBrowse.Size = new Size(57, 23);
@@ -453,6 +464,7 @@
             // 
             button_start.Anchor = AnchorStyles.Bottom;
             button_start.BackColor = Color.LightBlue;
+            button_start.Cursor = Cursors.Hand;
             button_start.Location = new Point(207, 389);
             button_start.Name = "button_start";
             button_start.Size = new Size(75, 23);
@@ -491,6 +503,7 @@
             Name = "Form1";
             Text = "Maze's Treasure Hunt";
             Load += Form1_Load;
+            ResizeBegin += resizeCell;
             ResizeEnd += resizeCell;
             Resize += resizeCell;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
@@ -544,5 +557,6 @@
         private Label label_interval;
         private ProgressBar progressBar1;
         private Label label_progress;
+        private HelpProvider helpProvider1;
     }
 }

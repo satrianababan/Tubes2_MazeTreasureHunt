@@ -26,19 +26,7 @@ namespace maze
             int height = (dataGridView1.Size.Height - selisih) / dataGridView1.RowCount;
             int width = (dataGridView1.Size.Width - selisih) / dataGridView1.ColumnCount;
             int sisaH = (dataGridView1.Size.Height - selisih) % dataGridView1.RowCount;
-            int sisaW = (dataGridView1.Size.Height - selisih) % dataGridView1.RowCount;
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                if (sisaH > 0)
-                {
-                    row.Height = height + 1;
-                    sisaH--;
-                }
-                else
-                {
-                    row.Height = height;
-                }
-            }
+            int sisaW = (dataGridView1.Size.Height - selisih) % dataGridView1.ColumnCount;
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
                 if (sisaW > 0)
@@ -49,6 +37,18 @@ namespace maze
                 else
                 {
                     col.Width = width;
+                }
+            }
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (sisaH > 0)
+                {
+                    row.Height = height + 1;
+                    sisaH--;
+                }
+                else
+                {
+                    row.Height = height;
                 }
             }
 
@@ -149,7 +149,7 @@ namespace maze
                     {
                         matrix[i, j] = lines[i][j * 2];
                         if (matrix[i, j] != 'K' && matrix[i, j] != 'R' && matrix[i, j] != 'X' && matrix[i, j] != 'T')
-                            throw new Exception("File tidak valid");
+                            throw new Exception("File tidak valid1" + matrix[i, j]);
                     }
                 }
                 solver = new Solver(matrix, rowLen, colLen);
@@ -217,6 +217,8 @@ namespace maze
         {
             string CombinedPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\..");
             projectRoot = System.IO.Path.GetFullPath(CombinedPath);
+            System.Diagnostics.Debug.WriteLine(projectRoot);
+            textBoxFileName.Text = emptyInputString;
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -251,6 +253,7 @@ namespace maze
 
         private void button2_Click(object sender, EventArgs e)
         {
+            openFileDialog1.InitialDirectory = projectRoot + "\\test";
             openFileDialog1.ShowDialog(this);
         }
 
