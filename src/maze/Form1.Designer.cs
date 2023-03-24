@@ -105,6 +105,8 @@ namespace maze
             dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             dataGridView1.Location = new Point(81, 11);
             dataGridView1.MinimumSize = new Size(326, 357);
+            dataGridView1.MultiSelect = false;
+            dataGridView1.ShowCellToolTips = false;
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
