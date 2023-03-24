@@ -501,7 +501,7 @@ namespace maze
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(750, 550);
             Name = "Form1";
-            Text = "Maze's Treasure Hunt";
+            Text = "Maze Treasure Hunt";
             Load += Form1_Load;
             ResizeBegin += resizeCell;
             ResizeEnd += resizeCell;
